@@ -22,3 +22,11 @@ h1 {
   padding: 50px;
   margin: auto;
 }
+
+body{
+  background-image: url(congratz.jpg);
+  height: 200%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
