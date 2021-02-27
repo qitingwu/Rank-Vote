@@ -14,39 +14,43 @@ function fillParticipants(){
     }
 }
 
-function populationCount(voting){
+export const populationCount = (voting) =>{
     var largest = -1;
     for(var row = 1; row<voting.length; row++){
         for(var column = 1; column<voting[0].length; column++){
-            if(largest < voting[row][column]){
-                largest = voting[row][column];
+            if(largest < parseInt(voting[row][column])){
+                largest = parseInt(voting[row][column]);
             }
         }
     }
     return largest;
 }
 
-function tieBreakWinner(ties, population, votes, maxRank) {
+export const tieBreakWinner = (ties, population, votes, maxRank) => {
     for (var rank = 2; rank <= maxRank; rank++) {
         var numVotes = new Array(population+1).fill(0);
         numVotes[0] = -1;
         var winningCand = 0;
         var newTies = [];
-        ties.forEach (cand => 
-            votes.forEach (vote => {
-                if (vote[cand] === rank) {
+        for(var i=0;i<ties.length;i++){
+            var cand = ties[i];
+        //ties.forEach (cand => 
+            for(var j=0;j<votes.length;j++){
+                var vote = votes[j];
+            //votes.forEach (vote => {
+                if (vote[cand] == rank) {
                     numVotes[cand]++;
                     if (numVotes[cand] > numVotes[winningCand]) {
                         winningCand = cand;
                         newTies = [];
-                    } else if (cand !== winningCand && numVotes[cand] === numVotes[winningCand]){
+                    } else if (cand != winningCand && numVotes[cand] == numVotes[winningCand]){
                         newTies.push(cand);
                     }
                 }
             
-            })
-        );
-        if (newTies.length === 0) {
+            }
+        }
+        if (newTies.length == 0) {
             return winningCand;
         }
     }
@@ -54,7 +58,9 @@ function tieBreakWinner(ties, population, votes, maxRank) {
 }
 
 export const rank = (vote) => {
-    population = populationCount(vote);
+    vote=vote.result;
+    population=populationCount(vote);
+    console.log(population);
     //make sure we have csv array and number of participants
     fillParticipants();
 
@@ -81,32 +87,36 @@ export const rank = (vote) => {
                 } else if (numVotes[participantNum] < numVotes[losingIndex]) {
                     losingIndex = participantNum;
                     ties = [];
-                } else if (participantNum !== losingIndex && numVotes[participantNum] === numVotes[losingIndex]) {
+                } else if (participantNum != losingIndex && numVotes[participantNum] == numVotes[losingIndex]) {
                     ties.push(participantNum);
                 }
             }
         }
-        if (numRemainingParticipants - ties.length === 0) {
+        if (numRemainingParticipants - ties.length == 0) {
             return tieBreakWinner(ties, population, vote, population);
         }
         eliminated[losingIndex] = true;
-        vote.forEach(v => {
+        for(var i=0;i<vote.length;i++){
+            var v = vote[i];
+        //vote.forEach(v => {
             v[losingIndex] -= 1;
-        })
+        }
         numRemainingParticipants--;
         
-        ties.forEach(tie => {
+        for(var i=0;i<ties.length;i++){
+            var tie = ties[i];
+        //ties.forEach(tie => {
             eliminated[tie] = true;
             vote.forEach(v => {
                 v[tie] -= 1;
             })
             numRemainingParticipants--;
-        });
+        }
 
     }
 
     for(var i = 1; i <= participants.length; i++) {
-        if (eliminated[i] === false) {
+        if (eliminated[i] == false) {
             return i;
         }
     }
