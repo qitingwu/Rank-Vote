@@ -75,7 +75,7 @@ class RankVote extends Component{
             }}
         >Please drop your csv file here</div>
         <h1>And the winner is.....</h1>
-        <h1>Participant Number: </h1>
+        <h1>Participant Number: {rank(this.state.vote)}</h1>
       
       </div>
       );
