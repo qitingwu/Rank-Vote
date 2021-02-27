@@ -1,0 +1,24 @@
+h1 {
+  text-align: center;
+}
+
+.dropbox {
+  display: flex;
+  justify-content: center;
+  border-style: dashed;
+  border-color: grey;
+  width: 300px;
+  padding: 50px;
+  margin: auto;
+}
+
+.dropbox:hover {
+  display: flex;
+  justify-content: center;
+  border-style: dashed;
+  border-color: lightblue;
+  background-color: lightgrey;
+  width: 300px;
+  padding: 50px;
+  margin: auto;
+}
