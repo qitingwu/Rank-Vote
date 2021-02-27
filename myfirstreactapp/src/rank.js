@@ -46,21 +46,28 @@ export const rank = () => {
     fillParticipants();
 
     //Each time, we need to determine last place
-    var numVotes = new Array(population+1).fill(0);
-    var eliminated = new Array(population+1).fill(false);
     var numRemainingParticipants = population;
-    var losingIndex = 0;
-    numVotes[losingIndex] = vote.length; // maximum - the total number of votes
-    var ties = [];
+    var eliminated = new Array(population+1).fill(false);
 
     while (numRemainingParticipants > 1) {
+        var numVotes = new Array(population+1).fill(0);
+        var ties = [];
+        var losingIndex = 0;
+        numVotes[losingIndex] = vote.length; // maximum - the total number of votes
+        var threshold = numRemainingParticipants / 2;
         for(var rowNum=1;rowNum<vote.length;rowNum++){
             var row = vote[rowNum];
             for (var participantNum = 1; participantNum <= participants.length; participantNum++) {
-                if (row[participantNum] === 1) {
+                if (row[participantNum] == 1) {
                     numVotes[participantNum]++;
+
+                    // Check if 50% of the votes have been gained
+                    if (numVotes[participantNum] >= threshold) {
+                        return participantNum;
+                    }
                 } else if (numVotes[participantNum] < numVotes[losingIndex]) {
                     losingIndex = participantNum;
+                    ties = [];
                 } else if (participantNum !== losingIndex && numVotes[participantNum] === numVotes[losingIndex]) {
                     ties.push(participantNum);
                 }
@@ -70,10 +77,16 @@ export const rank = () => {
             return tieBreakWinner(ties, population, vote, population);
         }
         eliminated[losingIndex] = true;
+        vote.forEach(v => {
+            v[losingIndex] -= 1;
+        })
         numRemainingParticipants--;
         
         ties.forEach(tie => {
             eliminated[tie] = true;
+            vote.forEach(v => {
+                v[tie] -= 1;
+            })
             numRemainingParticipants--;
         });
 
