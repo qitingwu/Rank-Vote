@@ -2,6 +2,7 @@ import React from "react";
 import { parse } from "papaparse";
 import Header from './Header'
 import './App.css';
+import {rank} from './rank.js';
 
 var vote = [];
 
