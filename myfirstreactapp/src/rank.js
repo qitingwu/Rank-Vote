@@ -58,8 +58,8 @@ export const tieBreakWinner = (ties, population, votes, maxRank) => {
 }
 
 export const findLosers = (numVotes, eliminated) => {
-    losers = [];
-    varLoserCount = numVotes.length + 1;
+    var losers = [];
+    var varLoserCount = numVotes.length + 1;
     for(var i = 1; i < numVotes.length; i++) {
         if (eliminated[i]) {
             continue;
