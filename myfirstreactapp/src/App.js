@@ -68,7 +68,7 @@ class RankVote extends Component{
                 ).forEach(async (file) => {
                     //console.log(file);
                     const text = await file.text();
-                    const result = parse(text).data;
+                    result = parse(text).data;
                     this.updateVote();
                     console.log(result);
                 }); 
