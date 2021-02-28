@@ -2,8 +2,12 @@ import React, {Component} from 'react';
 import { parse } from "papaparse";
 import './App.css';
 import {rank} from './rank.js';
+import Drumroll from './drumroll.mp3';
+import {Howl,Howler} from 'howler';
 
 var result = [];
+
+const audioClips = {sound: Drumroll};
 
 class RankVote extends Component{
   constructor(props){
@@ -13,11 +17,17 @@ class RankVote extends Component{
     };
   }
 
+  SoundPlay = (src) =>{
+    const sound = new Howl({src});
+    sound.play();
+  }
+
   updateVote = () => {
     this.setState({vote: {result}});
   }
   
   render(){
+    Howler.volume(0.5);
     if(this.state.vote.length === 0){
       return(
         <div className="page">
@@ -29,6 +39,7 @@ class RankVote extends Component{
             }}
             onDrop={(e)=>{
                 e.preventDefault();
+                this.SoundPlay(audioClips.sound);
                 //console.log(e.dataTransfer.files);//checks if file is being dropped in.
                 Array.from(e.dataTransfer.files)
                 .filter(
@@ -60,6 +71,7 @@ class RankVote extends Component{
             }}
             onDrop={(e)=>{
                 e.preventDefault();
+                this.SoundPlay(audioClips.sound);
                 //console.log(e.dataTransfer.files);//checks if file is being dropped in.
                 Array.from(e.dataTransfer.files)
                 .filter(
