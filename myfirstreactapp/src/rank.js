@@ -57,6 +57,25 @@ export const tieBreakWinner = (ties, population, votes, maxRank) => {
     return -1;
 }
 
+export const findLosers = (numVotes, eliminated) => {
+    losers = [];
+    varLoserCount = numVotes.length + 1;
+    for(var i = 1; i < numVotes.length; i++) {
+        if (eliminated[i]) {
+            continue;
+        }
+        if (numVotes[i] < varLoserCount) {
+            losers = [];
+            losers.push(i);
+            varLoserCount = numVotes[i];
+        }
+        else if (numVotes[i] == varLoserCount) {
+            losers.push(i)
+        }
+    }
+    return losers;
+}
+
 export const rank = (vote) => {
     vote=vote.result;
     population=populationCount(vote);
@@ -87,39 +106,25 @@ export const rank = (vote) => {
                     if (numVotes[participantNum] >= threshold) {
                         return participantNum;
                     }
-                } else if (numVotes[participantNum] < numVotes[losingIndex]) {
-                    losingIndex = participantNum;
-                    ties = [];
-                } else if (participantNum != losingIndex && numVotes[participantNum] == numVotes[losingIndex]) {
-                    ties.push(participantNum);
                 }
             }
         }
-        if (numRemainingParticipants - ties.length == 0) {
-            return tieBreakWinner(ties, population, vote, population);
+        var losers = findLosers(numVotes, eliminated);
+
+        if (numRemainingParticipants - losers.length == 0) {
+            return tieBreakWinner(losers, population, vote, population);
         }
-        eliminated[losingIndex] = true;
-        for(var i=0;i<vote.length;i++){
-            var row = vote[i];
-            if(row[losingIndex] == 1) {
-                for (var j=1; j < vote.length; j++) {
-                    row[j]--;
-                }
-                row[losingIndex] = 9999999;
-            }
-        }
-        numRemainingParticipants--;
         
-        for(var i=0;i<ties.length;i++){
-            var tie = ties[i];
-            eliminated[tie] = true;
+        for(var i=0;i<losers.length;i++){
+            var loser = losers[i];
+            eliminated[loser] = true;
             for(var i=0;i<vote.length;i++){
                 var row = vote[i];
-                if(row[tie] == 1) {
+                if(row[loser] == 1) {
                     for (var j=1; j < vote.length; j++) {
                         row[j]--;
                     }
-                    row[losingIndex] = 9999999;
+                    row[loser] = 9999999;
                 }
             }
             numRemainingParticipants--;
