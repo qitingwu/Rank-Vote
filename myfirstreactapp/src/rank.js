@@ -97,19 +97,28 @@ export const rank = (vote) => {
         }
         eliminated[losingIndex] = true;
         for(var i=0;i<vote.length;i++){
-            var v = vote[i];
-        //vote.forEach(v => {
-            v[losingIndex] -= 1;
+            var row = vote[i];
+            if(row[losingIndex] == 1) {
+                for (var j=1; j < vote.length; j++) {
+                    row[j]--;
+                }
+                row[losingIndex] = 9999999;
+            }
         }
         numRemainingParticipants--;
         
         for(var i=0;i<ties.length;i++){
             var tie = ties[i];
-        //ties.forEach(tie => {
             eliminated[tie] = true;
-            vote.forEach(v => {
-                v[tie] -= 1;
-            })
+            for(var i=0;i<vote.length;i++){
+                var row = vote[i];
+                if(row[tie] == 1) {
+                    for (var j=1; j < vote.length; j++) {
+                        row[j]--;
+                    }
+                    row[losingIndex] = 9999999;
+                }
+            }
             numRemainingParticipants--;
         }
 
