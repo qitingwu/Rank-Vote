@@ -77,6 +77,9 @@ export const rank = (vote) => {
         for(var rowNum=1;rowNum<vote.length;rowNum++){
             var row = vote[rowNum];
             for (var participantNum = 1; participantNum <= participants.length; participantNum++) {
+                if (eliminated[participantNum]){
+                    continue;
+                }
                 if (row[participantNum] == 1) {
                     numVotes[participantNum]++;
 
